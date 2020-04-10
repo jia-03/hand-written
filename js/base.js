@@ -8,7 +8,7 @@ Function.prototype.myApply = function (context = window, args = []) {
   //通过隐式绑定的方式调用函数
   let result = context[key](...args)
   //删除添加的属性
-  delete context.fn
+  delete context[key]
   //返回函数调用的返回值
   return result
 }
@@ -45,12 +45,13 @@ Function.prototype.myBind = function (context = window, ...bindArgs) {
   }
   // bind 返回一个绑定 this 的函数
   function fn(...callArgs) {
-    let args = bindArgs.concat(callArgs);
+    // let args = bindArgs.concat(callArgs);
     // if (this instanceof func) {
     //   // 意味着是通过 new 调用的 而 new 的优先级高于 bind
+
     //   return new func(...args);
     // }
-    // return func.apply(context, args);
+    // return func.apply(context, args); 
     return func.apply(this instanceof func ? this : context, bindArgs.concat(callArgs));
   }
   //赋值原型上的值
@@ -75,12 +76,12 @@ if (cat.say() === 'I\'m a white cat' &&
 
 
 //new
-function _new(fun, ...args) {
+function _new(Ctor, ...args) {
   if (typeof fun !== 'function') {
     return new Error('参数必须是一个函数');
   }
   const obj = Object.create(Ctor.prototype);
-  const ret = Ctur.apply(obj, args);
+  const ret = Ctor.apply(obj, args);
   return ret instanceof Object ? ret : obj;
 }
 
@@ -132,6 +133,29 @@ function jsonp({url, params, cb}) {
      document.body.appendChild(script)
   })
 }
-
 // 获取百度IP
 jsonp('fn', 'www.baidu.com');
+
+// foo 函数将会被调用 传入后台返回的数据
+function foo(data) {
+  console.log('通过jsonp获取后台数据:', data);
+  document.getElementById('data').innerHTML = data;
+}
+/**
+* 通过手动创建一个 script 标签发送一个 get 请求
+* 并利用浏览器对 <script> 不进行跨域限制的特性绕过跨域问题
+*/
+(function jsonp() {
+  let head = document.getElementsByTagName('head')[0]; // 获取head元素 把js放里面
+  let js = document.createElement('script');
+  js.src = 'http://domain:port/testJSONP?a=1&b=2&callback=foo'; // 设置请求地址
+  head.appendChild(js); // 这一步会发送请求
+})();
+
+// 后台代码
+// 因为是通过 script 标签调用的 后台返回的相当于一个 js 文件
+// 根据前端传入的 callback 的函数名直接调用该函数
+// 返回的是 'foo(3)'
+function testJSONP(callback, a, b) {
+return `${callback}(${a + b})`;
+}
