@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="https://cdn.bootcss.com/vue/2.6.11/vue.js"></script>
+<body>
+    <div id="app">
+        <span @click="change" style="font-size: 100px;">{{sum}}</span>
+      </div>
+</body>
+<script>
+    new Vue({
+      el: "#app",
+      data() {
+        return {
+          count: 1,
+        }
+      },
+      methods: {
+        change() {
+          this.count = 2
+        },
+      },
+      computed: {
+        sum() {
+          return this.count + 1
+        },
+      },
+    })
+  </script>
+
+</html>

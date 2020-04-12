@@ -134,7 +134,7 @@ function jsonp({url, params, cb}) {
   })
 }
 // 获取百度IP
-jsonp('fn', 'www.baidu.com');
+jsonp('www.baidu.com');
 
 // foo 函数将会被调用 传入后台返回的数据
 function foo(data) {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="./js/promise.js"></script>
+<body>
+    
+</body>
+<script>
+let p1 = new myPromise((resolve, reject) => {
+  setTimeout(() => {
+    Math.random()<0.5?resolve(100):reject(-100);
+  }, 1000)
+})
+
+let p2 = p1.then(result => {
+  //执行then返回的是一个新的Promise
+  return result + 100;
+})
+let p3 = p2.then(result => {
+  console.log(result);
+}, reason => {
+  console.log(reason)
+})
+</script>
+</html>
